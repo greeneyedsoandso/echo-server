@@ -29,22 +29,22 @@ def server(log_buffer=sys.stderr):
                     buffer = 16
                     data = conn.recv(buffer)
                     print('received "{0}"'.format(data.decode('utf8')))
-                    sock.sendall(data)
+                    conn.sendall(data)
                     print('sent "{0}"'.format(data.decode('utf8')))
-                    # if len(data) == 0:
-                    #     break
+                    if data == b'':
+                        break
 
             except Exception as e:
                 traceback.print_exc()
                 sys.exit(1)
-            # finally:
-            #     # TODO: When the inner loop exits, this 'finally' clause will
-            #     #       be hit. Use that opportunity to close the socket you
-            #     #       created above when a client connected.
-            #     print(
-            #         'echo complete, client connection closed', file=log_buffer
-            #     )
-            #     sock.close()
+            finally:
+                # TODO: When the inner loop exits, this 'finally' clause will
+                #       be hit. Use that opportunity to close the socket you
+                #       created above when a client connected.
+                print(
+                    'echo complete, client connection closed', file=log_buffer
+                )
+                sock.close()
     except KeyboardInterrupt:
         print('quitting echo server', file=log_buffer)
         sock.close()

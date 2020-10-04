@@ -24,21 +24,22 @@ def client(msg, log_buffer=sys.stderr):
         #
         #       Log each chunk you receive.  Use the print statement below to
         #       do it. This will help in debugging problems
-        chunk = sock.recv(16)
-        while len(chunk) > 0:
+
+        # while len(chunk) > 0:
+        while True:
+            chunk = sock.recv(16)
             print('received "{0}"'.format(chunk.decode('utf8')), file=log_buffer)
             full_message += chunk.decode('utf8')
-        print(full_message)
+            if chunk == b'':
+                break
     except Exception as e:
         traceback.print_exc()
         sys.exit(1)
-    # finally:
-    #     print('closing socket', file=log_buffer)
-    #     sock.close()
-
-        # TODO: when all is said and done, you should return the entire reply
-        # you received from the server as the return value of this function.
-    return full_message
+    finally:
+        print(full_message)
+        print('closing socket', file=log_buffer)
+        sock.close()
+        return full_message
 
 
 if __name__ == '__main__':
