@@ -8,29 +8,19 @@ def client(msg, log_buffer=sys.stderr):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
     print('connecting to {0} port {1}'.format(*server_address), file=log_buffer)
     sock.connect(server_address)
-    # you can use this variable to accumulate the entire message received back
-    # from the server
     full_message = ''
-
     # this try/finally block exists purely to allow us to close the socket
     # when we are finished with it
     try:
         print('sending "{0}"'.format(msg), file=log_buffer)
         sock.sendall(msg.encode('utf8'))
-        # TODO: the server should be sending you back your message as a series
-        #       of 16-byte chunks. Accumulate the chunks you get to build the
-        #       entire reply from the server. Make sure that you have received
-        #       the entire message and then you can break the loop.
-        #
-        #       Log each chunk you receive.  Use the print statement below to
-        #       do it. This will help in debugging problems
 
         while True:
             chunk = sock.recv(16)
             print('received "{0}"'.format(chunk.decode('utf8')), file=log_buffer)
             full_message += chunk.decode('utf8')
             if len(chunk) < 16:
-                break
+                return False
     except Exception as e:
         traceback.print_exc()
         sys.exit(1)
