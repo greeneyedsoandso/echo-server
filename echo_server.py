@@ -31,13 +31,13 @@ def server(log_buffer=sys.stderr):
                     conn.sendall(data)
                     print('sent "{0}"'.format(data.decode('utf8')))
                     if len(data) < 16:
-                        return False
+                        break
 
             except Exception as e:
                 traceback.print_exc()
                 sys.exit(1)
             finally:
-                sock.close()
+                conn.close()
                 print(
                     'echo complete, client connection closed', file=log_buffer
                 )

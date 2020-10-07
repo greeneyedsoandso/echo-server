@@ -20,7 +20,7 @@ def client(msg, log_buffer=sys.stderr):
             print('received "{0}"'.format(chunk.decode('utf8')), file=log_buffer)
             full_message += chunk.decode('utf8')
             if len(chunk) < 16:
-                return False
+                break
     except Exception as e:
         traceback.print_exc()
         sys.exit(1)
